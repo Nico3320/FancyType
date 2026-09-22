@@ -7,12 +7,17 @@
     -> for loop durch den Text bis er '\n' entdeckt, dann wissen wir ob und wo ein Umbruch ist. Dann muss man den Text splitten an den Umbruch stellen.
     -> vielleicht eine TEXT klasse? Dann kann man Farben an custom stellen setzen. Umbrüche etc.
 
-*/ ============================
+*/
 
 std::string char_to_string(char c) {
     std::string str;
     str.push_back(c);
     return str;
+}
+
+bool contains_line_break(std::string str) {
+    for(char c : str) if(c == '\n') return true;
+    return false;
 }
 
 std::unordered_map<std::string, std::string> COLORS = {
@@ -75,6 +80,31 @@ class COLOR {
         r = pR;
         g = pG;
         b = pB;
+    }
+};
+
+class TEXT {
+    private:
+    std::string raw_input;
+    std::vector<std::string> vec;
+
+    public:
+    TEXT(std::string str) {
+        raw_input = str;
+        if(contains_line_break(str)) {
+            vec = split_on(str, '\n');
+        }
+    }
+    std::vector<std::string> split_on(std::string str, char c) {
+        std::vector<std::string> res;
+        std::string current;
+        for(char ch : str) {
+            if(ch == c) {
+                res.push_back(current);
+                current = "";
+            } else current.push_back(ch);
+        }
+        return res;
     }
 };
 
@@ -251,5 +281,5 @@ void bordered_text(std::string text, BORDER border, int paddingVertical, int pad
 }
 
 int main() {
-    bordered_text("Hallo!", BORDER(), 0, 2);
+    
 }
