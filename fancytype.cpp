@@ -2,6 +2,13 @@
 #include <vector>
 #include <unordered_map>
 
+/* =========== TODO ===========
+- Bordered Text muss mit Umbruch funktionieren
+    -> for loop durch den Text bis er '\n' entdeckt, dann wissen wir ob und wo ein Umbruch ist. Dann muss man den Text splitten an den Umbruch stellen.
+    -> vielleicht eine TEXT klasse? Dann kann man Farben an custom stellen setzen. Umbrüche etc.
+
+*/ ============================
+
 std::string char_to_string(char c) {
     std::string str;
     str.push_back(c);
