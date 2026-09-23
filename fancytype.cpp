@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <string>
 
 /* =========== TODO ===========
 - Bordered Text muss mit Umbruch funktionieren
@@ -21,8 +22,13 @@ bool contains_line_break(std::string str) {
     return false;
 }
 
+bool char_is_num(char c) {
+    for(int i = 48; i < 58; i++) if(c == i) return true;
+    return false;
+}
+
 // ============================ Ansi
-std::unordered_map<std::string, std::string> COLORS = {
+std::unordered_map<std::string, std::string> ANSI = {
     {"BLACK",              "\033[30m"},
     {"RED",                "\033[31m"},
     {"GREEN",              "\033[32m"},
@@ -145,57 +151,111 @@ void mod(std::vector<std::string> mods) {
 void line(int size, COLOR color, std::string pieces) {
     std::cout << color_code(color.r, color.g, color.b);
     for(int i = 0; i < size; i++) std::cout << pieces;
-    std::cout << COLORS["RESET"];
+    std::cout << ANSI["RESET"];
 }
 void line(int size, std::string pieces) {
     for(int i = 0; i < size; i++) std::cout << pieces;
-    std::cout << COLORS["RESET"];
+    std::cout << ANSI["RESET"];
+}
+
+std::string process(std::string str) {
+    std::string current = "";
+    COLOR col;
+    int count = 0;
+    std::string newStr  = "";
+    bool record = false;
+    bool record_color = false;
+
+    for(char c : str) {
+        if(c == '%') {
+            if(!record) record = true;
+        } else if(c == '$') {
+            if(!record_color) record_color = true;
+        } else {
+            if(record) {
+                if(c == ' ') {
+                    newStr += ANSI[current];
+                    record = false;
+                    current = "";
+                } else current.push_back(c);
+            } else if(record_color) {
+                if(!char_is_num(c)) {
+                    switch(count) {
+                        case 0:
+                            col.r = stoi(current);
+                            break;
+                        case 1:
+                            col.g = stoi(current);
+                            break;
+                        case 2:
+                            col.b = stoi(current);
+                            break;
+                    }
+                    current = "";
+                    count++;
+                    if(count == 3) {
+                        count = 0;
+                        newStr += color_code(col);
+                        col = COLOR();
+                        record_color = false;
+                    }
+                } else current.push_back(c);
+            } else {
+                newStr.push_back(c);
+            }
+        }
+    }
+    if(current.size() != 0) newStr += ANSI[current];
+    return newStr;
 }
 
 void print(std::string str) {
-    std::cout << str;
+    std::cout << process(str);
+}
+void println(std::string str) {
+    std::cout << process(str) << std::endl;
 }
 
 void bordered_text(std::string text, BORDER border, int paddingVertical, int paddingHorizontal) {
-    if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-    if(border.bold)   std::cout << COLORS["BOLD"];
+    if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+    if(border.bold)   std::cout << ANSI["BOLD"];
     std::cout << color_code(border.color);
 
     std::cout << border.corner;
     line(text.size()+(paddingHorizontal*2), char_to_string(border.top));
-    if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-    if(border.bold)   std::cout << COLORS["BOLD"];
+    if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+    if(border.bold)   std::cout << ANSI["BOLD"];
     std::cout << color_code(border.color);
 
     std::cout << char_to_string(border.corner) << "\n";
     for(int i = 0; i < paddingVertical; i++) {
         std::cout << char_to_string(border.left);
-        std::cout << COLORS["RESET"];
+        std::cout << ANSI["RESET"];
         line(text.size()+(paddingHorizontal*2), " ");
 
-        if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-        if(border.bold)   std::cout << COLORS["BOLD"];
+        if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+        if(border.bold)   std::cout << ANSI["BOLD"];
         std::cout << color_code(border.color);
         std::cout << char_to_string(border.right);
         std::cout << "\n";
     }
     std::cout << char_to_string(border.left);
-    std::cout << COLORS["RESET"];
+    std::cout << ANSI["RESET"];
     for(int i = 0; i < paddingHorizontal; i++) std::cout << " ";
     print(text);
     for(int i = 0; i < paddingHorizontal; i++) std::cout << " ";
 
-    if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-    if(border.bold)   std::cout << COLORS["BOLD"];
+    if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+    if(border.bold)   std::cout << ANSI["BOLD"];
     std::cout << color_code(border.color);
     std::cout << char_to_string(border.right) << "\n";
     for(int i = 0; i < paddingVertical; i++) {
         std::cout << char_to_string(border.left);
-        std::cout << COLORS["RESET"];
+        std::cout << ANSI["RESET"];
         line(text.size()+(paddingHorizontal*2), " ");
 
-        if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-        if(border.bold)   std::cout << COLORS["BOLD"];
+        if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+        if(border.bold)   std::cout << ANSI["BOLD"];
         std::cout << color_code(border.color);
         std::cout << char_to_string(border.right);
         std::cout << "\n";
@@ -203,13 +263,13 @@ void bordered_text(std::string text, BORDER border, int paddingVertical, int pad
     std::cout << border.corner;
 
     line(text.size()+(paddingHorizontal*2), char_to_string(border.bottom));
-    if(border.strike) std::cout << COLORS["STRIKETHROUGH"];
-    if(border.bold)   std::cout << COLORS["BOLD"];
+    if(border.strike) std::cout << ANSI["STRIKETHROUGH"];
+    if(border.bold)   std::cout << ANSI["BOLD"];
     std::cout << color_code(border.color);
 
     std::cout << char_to_string(border.corner);
 }
 
 int main() {
-
+    println("Hi!");
 }
