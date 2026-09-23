@@ -2,8 +2,7 @@
 
 ## ANSI-Code Integration
 
-### Mit der Map ANSI[], wurden ANSI-Code sequenzen ganz einfach mit eingebunden.
-### Gib einfach zu ANSI[] einen validen String Parameter (Liste unten), und erhalte den passenden ANSI-Code als string zurück.
+### Mit der Map ANSI[], wurden ANSI-Code sequenzen ganz einfach mit eingebunden. Gib einfach zu ANSI[] einen validen String Parameter (Liste unten), und erhalte den passenden ANSI-Code als string zurück.
 
 **Valide eingaben für Text Farb änderung:**
 - BLACK
@@ -56,9 +55,32 @@
 **Um die Konsolen Modifikationen zu entfernen einfach:**
 - RESET
 
+*Anwendungs Beispiel*
+
+```
+#include <iostream>
+#include "fancytype"
+
+int main() {
+    std::cout << ANSI["RED"] << "Roter Text" << ANSI["BOLD"] << "Fetter Roter Text";
+}
+```
+
+## Klassen
+
+### COLOR
+Die COLOR Klasse nimmt und hält eine Farbe, aufgeteilt in ihre RGB-Dezimal Werte.
+Objekte der Klasse enthalten 3 Attribute, jeweils einen pro Farbwert:
+
+```
+int r = 255;
+int g = 255;
+int b = 255;
+```
+
 ## Funktionen
 
-### std::string color_code(int r, int g, int b)
+### `std::string color_code(int r, int g, int b`
 Nimmt Parameter im Wert von 0-255 und bildet daraus eine Farbe in form von ANSI-Code und gibt sie als String zurück
 
 *Anwendungs Beispiel*
@@ -71,3 +93,5 @@ int main() {
     std::cout << color_code(255, 255, 0) << "Dein Farbiger Text hier";
 }
 ```
+
+### ``
