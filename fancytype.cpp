@@ -90,6 +90,10 @@ class COLOR {
         g = pG;
         b = pB;
     }
+
+    // Freundschaft ding mit cout, was dann automatisch den ansi string ausgibt
+    // bsp. std::cout << myColor << "Text";
+
 };
 
 class BORDER {
