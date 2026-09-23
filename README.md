@@ -49,8 +49,10 @@
 * BG_BRIGHT_WHITE
 
 </details>
+
 <details>
 <summary>Valide eingaben für Text Modifikation:</summary>
+
 * BOLD
 * DIM
 * ITALIC
