@@ -62,11 +62,11 @@
 Nimmt Parameter im Wert von 0-255 und bildet daraus eine Farbe in form von ANSI-Code und gibt sie als String zurück
 
 *Anwendungs Beispiel*
-'
+`
 #include <iostream>
 #include "fancytype.cpp"
 
 int main() {
     std::cout << color_code(255, 255, 0) << "Dein Farbiger Text hier";
 }
-'
+`
