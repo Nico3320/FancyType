@@ -4,6 +4,16 @@
 
 ### Mit der Map ANSI[], wurden ANSI-Code sequenzen ganz einfach mit eingebunden. Gib einfach zu ANSI[] einen validen String Parameter (Liste unten), und erhalte den passenden ANSI-Code als string zurück.
 
+<details>
+<summary>Klicke hier, um die Liste zu öffnen</summary>
+
+* Erster Listenpunkt
+* Zweiter Listenpunkt
+* Dritter Listenpunkt
+
+</details>
+
+
 **Valide eingaben für Text Farb änderung:**
 - BLACK
 - RED
