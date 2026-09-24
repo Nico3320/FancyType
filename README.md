@@ -70,7 +70,7 @@ Basic ANSI-codes sind in der Map ANSI gespeichert. Mögliche String-Inputs unten
 
 ```
 #include <iostream>
-#include "fancytype"
+#include "fancytype.cpp"
 
 int main() {
     std::cout << ANSI["RED"] << "Roter Text" << ANSI["BOLD"] << "Fetter Roter Text" << ANSI["RESET"] << "Normaler Text";
