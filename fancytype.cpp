@@ -3,10 +3,30 @@
 #include <unordered_map>
 #include <string>
 
+// ============================ Helpers
+
+#ifdef _WIN32
+
+#include <windows.h>
+
+int getTerminalWidth()
+{
+    CONSOLE_SCREEN_BUFFER_INFO csbi{};
+
+    if (!GetConsoleScreenBufferInfo(
+            GetStdHandle(STD_OUTPUT_HANDLE),
+            &csbi))
+    {
+        return 0;
+    }
+
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+
+#else
+
 #include <sys/ioctl.h>
 #include <unistd.h>
-
-// ============================ Helpers
 
 int getTerminalWidth() {
     struct winsize w{};
@@ -15,6 +35,8 @@ int getTerminalWidth() {
     }
     return w.ws_col;
 }
+
+#endif
 
 std::string char_to_string(char c) {
     std::string str;
@@ -318,9 +340,4 @@ void bordered_text(std::string text, BORDER border, int paddingVertical, int pad
     std::cout << color_code(border.color);
 
     std::cout << char_to_string(border.corner);
-}
-
-int main() {
-    header("Titel", COLOR(255,0,255), '=', 5);
-    header("Titel 2", COLOR(0,255,255), '=', 5);
 }
