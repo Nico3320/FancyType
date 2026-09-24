@@ -3,14 +3,19 @@
 #include <unordered_map>
 #include <string>
 
-/* =========== TODO ===========
-- Bordered Text muss mit Umbruch funktionieren
-    -> for loop durch den Text bis er '\n' entdeckt, dann wissen wir ob und wo ein Umbruch ist. Dann muss man den Text splitten an den Umbruch stellen.
-    -> vielleicht eine TEXT klasse? Dann kann man Farben an custom stellen setzen. Umbrüche etc.
-
-*/
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 // ============================ Helpers
+
+int getTerminalWidth() {
+    struct winsize w{};
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == -1) {
+        return 0; // failed
+    }
+    return w.ws_col;
+}
+
 std::string char_to_string(char c) {
     std::string str;
     str.push_back(c);
@@ -179,6 +184,30 @@ void line(int size, std::string pieces) {
     std::cout << ANSI["RESET"];
 }
 
+void headLine(COLOR color, char piece) {
+    std::string str;
+    str.push_back(piece);
+    line(getTerminalWidth(), color, str);
+}
+void headLine(char piece) {
+    std::string str;
+    str.push_back(piece);
+    line(getTerminalWidth(), str);
+}
+
+void header(std::string text, COLOR color, char piece, int margin) {
+    line(margin, color, char_to_string(piece));
+    std::cout << color << text;
+    line(getTerminalWidth()-margin-text.size(), char_to_string(piece));
+    std::cout << ANSI["RESET"] << std::endl;
+}
+void header(std::string text, char piece, int margin) {
+    line(margin, char_to_string(piece));
+    std::cout << text;
+    line(getTerminalWidth()-margin-text.size(), char_to_string(piece));
+    std::cout << std::endl;
+}
+
 std::string process(std::string str) {
     std::string current = "";
     COLOR col;
@@ -292,5 +321,6 @@ void bordered_text(std::string text, BORDER border, int paddingVertical, int pad
 }
 
 int main() {
-    
+    header("Titel", COLOR(255,0,255), '=', 5);
+    header("Titel 2", COLOR(0,255,255), '=', 5);
 }

@@ -174,6 +174,46 @@ int main() {
 }
 ´´´
 
+### `headLine(COLOR color, char piece)`
+(COLOR Optional)
+Schreibt eine Linie, die sich auf die Ganze Konsolen-Breite anpasst, bestehend aus einem char.
+
+*Anwendungs Beispiel*
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    headLine('=');
+    // -> ...=========...
+    headLine('+');
+    // -> ...+++++++++...
+    
+    headLine(COLOR(0,255,0), '=');
+    // -> ...=========... (Aber in Grün)
+}
+```
+
+### `void header(std::string text, COLOR color, char piece, int margin)`
+(COLOR Optional)
+Schreibt zuerst eine anzahl an "piece" in der Menge von "margin"
+Danach kommt "text", unsere Überschrift
+Und der Rest Wird aufgefüllt mit "piece"
+
+*Anwendungs Beispiel*
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    header("Topic", '=', 5);
+    // -> =====Topic================...
+
+    header("Topic", COLOR(255,0,0), '=', 5);
+    // -> =====Topic================... (Aber in Rot)
+}
+```
+
 ### `process(std::string str)`
 Produziert einen funktionellen String aus einem Normal-lesbaren String
 
