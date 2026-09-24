@@ -2,10 +2,10 @@
 
 ## ANSI-Code Integration
 
-### Mit der Map ANSI[], wurden ANSI-Code sequenzen ganz einfach mit eingebunden. Gib einfach zu ANSI[] einen validen String Parameter (Liste unten), und erhalte den passenden ANSI-Code als string zurück.
+Basic ANSI-codes sind in der Map ANSI gespeichert. Mögliche String-Inputs unten. 
 
 <details>
-<summary>Valide eingaben für Text Farben änderungen:</summary>
+<summary>Text Farben ändern:</summary>
 
 * BLACK
 * RED
@@ -28,7 +28,7 @@
 </details>
 
 <details>
-<summary>Valide eingaben für Text Hintergrund änderung:</summary>
+<summary>Text Hintergrund ändern:</summary>
 
 * BG_BLACK
 * BG_RED
@@ -51,7 +51,7 @@
 </details>
 
 <details>
-<summary>Valide eingaben für Text Modifikation:</summary>
+<summary>Text Modifizieren:</summary>
 
 * BOLD
 * DIM
@@ -73,7 +73,7 @@
 #include "fancytype"
 
 int main() {
-    std::cout << ANSI["RED"] << "Roter Text" << ANSI["BOLD"] << "Fetter Roter Text";
+    std::cout << ANSI["RED"] << "Roter Text" << ANSI["BOLD"] << "Fetter Roter Text" << ANSI["RESET"] << "Normaler Text";
 }
 ```
 
@@ -88,6 +88,38 @@ int r = 255;
 int g = 255;
 int b = 255;
 ```
+
+Ein COLOR-Objekt kann in verschiedenen FancyType Funktionen eingefügt werden, aber auch einfach in das cout.
+
+*Anwendungs Beispiel*
+
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    COLOR color1(255,0,255);
+    std::cout << color1 << "Farbiger Text!";
+}
+```
+
+Um die Farbe anzupassen ganz einfach die Attribute ändern, oder mit `color1.set_color(int r, int g, int b)`
+
+### BORDER
+Die BORDER Klasse ist an sich nur sinnvoll in eigener Benutzung, oder in Benutzung mit der "bordered_text()" Funktion.
+
+Sie hält in eigenen Attributen die Eigenschaften eines Rahmens.
+- char (Standart '%')
+- - top    -> Die obere Leiste eines Rahmens
+- - bottom -> Die untere Leiste eines Rahmens
+- - left   -> Die Linke Seite eines Rahmens
+- - right  -> Die Rechte Seite eines Rahmens
+- - corner -> Die Ecken eines Rahmens
+- bool (Standart true)
+- - strike -> Entscheidet ob der Rahmen Durchgestrichen ist
+- - bold   -> Entscheidet ob der Rahmen Dick ist
+- COLOR (Standart Weiß)
+- - color  -> Setzt die Farbe vom Rahmen
 
 ## Funktionen
 
@@ -105,4 +137,94 @@ int main() {
 }
 ```
 
-### ``
+### `mod(std::vector<std::string> mods)`
+Nimmt ein Feld von Konsolen Modifikationen und gibt sie sofort zur Konsole aus.
+
+*Anwendungs Beispiel*
+
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    mod({"RED", "BOLD"});
+    std::cout << "Fetter Roter Text!";
+
+    mod({"RESET"});
+    std::cout << "Normaler Text";
+}
+```
+
+### `line(int size, COLOR color, std::string pieces)`
+Druckt eine linie in die Konsole.
+- size für die Länge
+- color(optional) für die Farbe der Line
+- pieces für das Linien Stück
+
+*Anwendungs Beispiel*
+
+´´´
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    line(5, COLOR(255,255,255), "="); // -> "====="
+    line(5, "=");                     // -> "=====" genau gleich
+    line(5, "!=");                    // -> "!=!=!=!=!="
+}
+´´´
+
+### `process(std::string str)`
+Produziert einen funktionellen String aus einem Normal-lesbaren String
+
+- '%' Um eine Modifikation hinzuzufügen
+- - Nimmt als Modifikation genau das was nach dem %, und vor dem nächsten ' ' steht.
+- - Muss eine Valide Modifikation aus den Oberen Listen sein
+
+- '$' Um einen Farb-Code hinzuzufügen
+- - Nimmt als Farb Code das was durch ein nicht-zahl-zeichen getrennt ist. <br> Kann so aussehen: $255 255 0 aber auch so $255,255,0 oder auch so $255q255q0
+
+*Anwendungs Beispiel*
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    std::string text1 = process("Blanker Text, %RED Roter Text %BOLD Fetter Roter Text");
+    // text1 -> "Blanker Text, \033[31mRoter Text \033[1mFetter Roter Text"
+
+    std::string text2 = process("$255,0,255 Pinker Text");
+    // text2 -> "\033[38;2;255;0;255mPinker Text"
+
+    std::cout << text1 << " " << text2;
+    // -> "Blanker Text, Roter Text Fetter Roter Text Pinker Text"
+}
+```
+
+### `print(std::string str)`
+Druckt den String und lässt gleichzeitig auch "process()" davor laufen sodass auch Modifikationen möglich sind.
+
+### `println(std::string str)`
+Gleich wie "print()" nur mit Zeilenumbruch
+
+### `bordered_text(std::string text, BORDER border, int paddingVertical, int paddingHorizontal)`
+Druckt Text innerhalb eines Rahmens.
+- text ist der gedruckte text
+- border ist ein Objekt der Klasse BORDER, der das border-design hält
+- paddingVertical ist der Vertikale abstand zwischen Text und Rahmen
+- paddingHorizontal ist der Horizontale abstand zwischen Text und Rahmen
+
+*Anwendungs Beispiel*
+```
+#include <iostream>
+#include "fancytype.cpp"
+
+int main() {
+    bordered_text("Mein Text!", BORDER(), 1, 1);
+    //   %%%%%%%%%%%%%%
+    //   %            %
+    //   % Mein Text! %
+    //   %            %
+    //   %%%%%%%%%%%%%%
+}
+```

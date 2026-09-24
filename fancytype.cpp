@@ -91,10 +91,27 @@ class COLOR {
         b = pB;
     }
 
+    void set_color(int pR, int pG, int pB) {
+        r = pR;
+        g = pG;
+        b = pB;
+    }
+
+    std::string get() {
+        std::string res = "\033[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m";
+        return res;
+    }
+
     // Freundschaft ding mit cout, was dann automatisch den ansi string ausgibt
     // bsp. std::cout << myColor << "Text";
 
 };
+
+std::ostream& operator<<(std::ostream& os, const COLOR& c) {
+    std::string str = "\033[38;2;" + std::to_string(c.r) + ";" + std::to_string(c.g) + ";" + std::to_string(c.b) + "m";
+    os << str;
+    return os;
+}
 
 class BORDER {
     public:
@@ -275,5 +292,5 @@ void bordered_text(std::string text, BORDER border, int paddingVertical, int pad
 }
 
 int main() {
-    println("Hi!");
+    
 }
